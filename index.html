@@ -1,0 +1,2425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduQuest Rural - Transforming Rural Education</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2d3748;
+            background-color: #f8f9ff;
+            overflow-x: hidden;
+        }
+
+        /* Color Palette */
+        :root {
+            --primary-green: #81d4af;
+            --primary-purple: #a78bfa;
+            --primary-pink: #f3a5c0;
+            --accent-green: #6ee7b7;
+            --accent-purple: #c084fc;
+            --accent-pink: #f9a8d4;
+            --light-bg: #f8f9ff;
+            --white: #ffffff;
+            --text-dark: #2d3748;
+            --text-light: #6b7280;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --shadow-lg: rgba(0, 0, 0, 0.15);
+            --gradient-primary: linear-gradient(135deg, var(--primary-green), var(--primary-purple));
+            --gradient-accent: linear-gradient(135deg, var(--accent-green), var(--accent-purple), var(--accent-pink));
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-purple);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-spinner.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Navigation */
+        nav {
+            background: var(--gradient-primary);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 20px var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            background: rgba(129, 212, 175, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .auth-btn {
+            padding: 0.5rem 1.5rem;
+            border: 2px solid var(--white);
+            background: transparent;
+            color: var(--white);
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .auth-btn.primary {
+            background: var(--white);
+            color: var(--primary-purple);
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        main {
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--gradient-accent);
+            padding: 6rem 0;
+            text-align: center;
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300"><path fill="rgba(255,255,255,0.1)" d="M0,100 C300,200 500,0 800,100 C900,150 1000,50 1200,100 L1200,300 L0,300 Z"/></svg>') no-repeat center bottom;
+            background-size: cover;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero .tagline {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+            line-height: 1.7;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--white);
+            color: var(--primary-purple);
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+        }
+
+        .cta-button.secondary {
+            background: transparent;
+            color: var(--white);
+            border-color: var(--white);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Sections */
+        .section {
+            padding: 5rem 0;
+        }
+
+        .section h2 {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+            font-weight: bold;
+        }
+
+        .section .subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 4rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Feature Cards */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px var(--shadow);
+            transition: all 0.3s ease;
+            border-top: 4px solid var(--primary-green);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:nth-child(2n) {
+            border-top-color: var(--primary-purple);
+        }
+
+        .feature-card:nth-child(3n) {
+            border-top-color: var(--primary-pink);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            transform: translate(50%, -50%);
+            opacity: 0.1;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px var(--shadow-lg);
+        }
+
+        .feature-card:hover::before {
+            transform: translate(30%, -30%) scale(1.2);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-purple);
+            display: block;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            color: var(--text-light);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 0.3rem 0;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-list li i {
+            color: var(--primary-green);
+            font-size: 0.8rem;
+        }
+
+        /* SWOT Analysis */
+        .swot-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .swot-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 30px var(--shadow);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .swot-card.strengths {
+            border-left: 6px solid var(--primary-green);
+        }
+
+        .swot-card.weaknesses {
+            border-left: 6px solid var(--primary-pink);
+        }
+
+        .swot-card.opportunities {
+            border-left: 6px solid var(--primary-purple);
+        }
+
+        .swot-card.threats {
+            border-left: 6px solid var(--accent-pink);
+        }
+
+        .swot-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px var(--shadow-lg);
+        }
+
+        .swot-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .swot-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .swot-card li {
+            padding: 0.5rem 0;
+            color: var(--text-light);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            line-height: 1.6;
+        }
+
+        /* Authentication Pages */
+        .auth-container {
+            max-width: 500px;
+            margin: 2rem auto;
+            background: var(--white);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 15px 50px var(--shadow);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-header h2 {
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-header p {
+            color: var(--text-light);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: var(--white);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-purple);
+            box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.1);
+        }
+
+        .form-group .error {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .form-group input.error {
+            border-color: #ef4444;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: var(--gradient-primary);
+            color: var(--white);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--shadow-lg);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .auth-links {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .auth-links a {
+            color: var(--primary-purple);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+
+        .role-selection {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .role-option {
+            text-align: center;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .role-option:hover {
+            border-color: var(--primary-purple);
+        }
+
+        .role-option.selected {
+            border-color: var(--primary-purple);
+            background: rgba(167, 139, 250, 0.1);
+        }
+
+        .role-option i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-purple);
+        }
+
+        /* How It Works Section */
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .workflow-step {
+            text-align: center;
+            position: relative;
+        }
+
+        .workflow-step::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -1rem;
+            width: 2rem;
+            height: 2px;
+            background: var(--primary-purple);
+            transform: translateY(-50%);
+        }
+
+        .workflow-step:last-child::after {
+            display: none;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .workflow-step h4 {
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .workflow-step p {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Stats Section */
+        .stats-container {
+            background: var(--gradient-primary);
+            color: var(--white);
+            padding: 4rem 0;
+            margin: 4rem 0;
+            border-radius: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 1rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Testimonials */
+        .testimonial-slider {
+            max-width: 800px;
+            margin: 3rem auto;
+            text-align: center;
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px var(--shadow);
+        }
+
+        .testimonial-content {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .author-info h4 {
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .author-info p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* FAQ Section */
+        .faq-container {
+            max-width: 800px;
+            margin: 3rem auto;
+        }
+
+        .faq-item {
+            background: var(--white);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 15px var(--shadow);
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            background: var(--white);
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: rgba(167, 139, 250, 0.05);
+        }
+
+        .faq-question i {
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            background: rgba(248, 249, 255, 0.5);
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 200px;
+        }
+
+        .faq-answer p {
+            padding: 1.5rem;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Contact Form */
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 3rem;
+            align-items: start;
+        }
+
+        .contact-info {
+            background: var(--gradient-primary);
+            color: var(--white);
+            padding: 3rem;
+            border-radius: 20px;
+        }
+
+        .contact-info h3 {
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact-item i {
+            font-size: 1.2rem;
+            width: 20px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .social-links a {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--white);
+            color: var(--primary-purple);
+            transform: translateY(-3px);
+        }
+
+        .contact-form {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px var(--shadow);
+        }
+
+        /* Newsletter */
+        .newsletter-section {
+            background: var(--light-bg);
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .newsletter-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 50px;
+            font-size: 1rem;
+        }
+
+        .newsletter-form button {
+            padding: 1rem 2rem;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-dark);
+            color: var(--white);
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-green);
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul li a {
+            color: #d1d5db;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: var(--primary-green);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #374151;
+            padding-top: 2rem;
+            text-align: center;
+            color: #9ca3af;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--gradient-primary);
+                flex-direction: column;
+                padding: 2rem;
+                box-shadow: 0 4px 20px var(--shadow);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .auth-buttons {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero .tagline {
+                font-size: 1.1rem;
+            }
+
+            .section h2 {
+                font-size: 2.2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .swot-container {
+                grid-template-columns: 1fr;
+            }
+
+            .workflow-steps {
+                grid-template-columns: 1fr;
+            }
+
+            .workflow-step::after {
+                display: none;
+            }
+
+            .contact-container {
+                grid-template-columns: 1fr;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .cta-button {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .role-selection {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .animate-slide-left {
+            animation: slideInLeft 0.6s ease-out;
+        }
+
+        .animate-slide-right {
+            animation: slideInRight 0.6s ease-out;
+        }
+
+        /* Utility Classes */
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .mb-3 { margin-bottom: 1.5rem; }
+        .mb-4 { margin-bottom: 2rem; }
+
+        .mt-1 { margin-top: 0.5rem; }
+        .mt-2 { margin-top: 1rem; }
+        .mt-3 { margin-top: 1.5rem; }
+        .mt-4 { margin-top: 2rem; }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        /* Focus styles for accessibility */
+        *:focus {
+            outline: 3px solid var(--primary-purple);
+            outline-offset: 2px;
+        }
+
+        /* Skip to content link for accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: var(--primary-purple);
+            color: white;
+            padding: 8px;
+            text-decoration: none;
+            border-radius: 4px;
+            z-index: 10001;
+        }
+
+        .skip-link:focus {
+            top: 6px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="loading-spinner">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Skip to content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo" onclick="showPage('home')">
+                <i class="fas fa-graduation-cap"></i> EduQuest Rural
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#" onclick="showPage('home')">Home</a></li>
+                <li><a href="#" onclick="showPage('about')">About</a></li>
+                <li><a href="#" onclick="showPage('features')">Features</a></li>
+                <li><a href="#" onclick="showPage('solution')">How It Works</a></li>
+                <li><a href="#" onclick="showPage('contact')">Contact</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <a href="#" class="auth-btn" onclick="showPage('signin')">Sign In</a>
+                <a href="#" class="auth-btn primary" onclick="showPage('signup')">Join Now</a>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle mobile menu">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <main id="main-content">
+        <!-- Home Page -->
+        <div id="home" class="page active">
+            <section class="hero">
+                <div class="container">
+                    <div class="hero-content">
+                        <h1>EduQuest Rural</h1>
+                        <div class="tagline">Transforming Rural Education Through AI-Powered Learning</div>
+                        <p>Embark on interactive STEM adventures with personalized AI mentorship, voice-enabled learning in 15+ languages, and community-driven educational experiences that bridge the digital divide.</p>
+                        <div class="hero-buttons">
+                            <a href="#" class="cta-button" onclick="showPage('signup')">Get Started Free</a>
+                            <a href="#" class="cta-button secondary" onclick="showPage('solution')">Learn How It Works</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Stats Section -->
+            <section class="section">
+                <div class="container">
+                    <div class="stats-container">
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-number">15+</span>
+                                <div class="stat-label">Local Languages Supported</div>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">85%</span>
+                                <div class="stat-label">Improvement in STEM Engagement</div>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">50k+</span>
+                                <div class="stat-label">Students Reached</div>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">95%</span>
+                                <div class="stat-label">Parent Satisfaction Rate</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Key Features Preview -->
+            <section class="section">
+                <div class="container">
+                    <h2>Why Choose EduQuest Rural?</h2>
+                    <p class="subtitle">Experience the future of rural education with our comprehensive learning platform designed specifically for underserved communities.</p>
+                    
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <i class="fas fa-robot feature-icon"></i>
+                            <h3>AI-Powered Mentorship</h3>
+                            <p>Personalized learning companion that adapts to each student's pace, learning style, and interests.</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-microphone feature-icon"></i>
+                            <h3>Voice Learning</h3>
+                            <p>Speak and learn in your native language with advanced speech recognition and text-to-speech technology.</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-gamepad feature-icon"></i>
+                            <h3>Gamified Adventures</h3>
+                            <p>Turn learning into exciting quests with stories, badges, levels, and collaborative challenges.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testimonials -->
+            <section class="section">
+                <div class="container">
+                    <h2>What Our Community Says</h2>
+                    <div class="testimonial-slider">
+                        <div class="testimonial-content">
+                            "EduQuest Rural has transformed how my students engage with science. They're excited to learn and ask questions I never heard before. The AI mentor feels like having a personal tutor for each child."
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">MS</div>
+                            <div class="author-info">
+                                <h4>Meera Sharma</h4>
+                                <p>Rural School Teacher, Rajasthan</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Sign In Page -->
+        <div id="signin" class="page">
+            <section class="section">
+                <div class="container">
+                    <div class="auth-container">
+                        <div class="auth-header">
+                            <h2>Welcome Back!</h2>
+                            <p>Sign in to continue your learning journey</p>
+                        </div>
+                        <form id="signinForm" onsubmit="handleSignIn(event)">
+                            <div class="form-group">
+                                <label for="signinEmail">Email Address</label>
+                                <input type="email" id="signinEmail" name="email" required>
+                                <div class="error" id="signinEmailError"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="signinPassword">Password</label>
+                                <input type="password" id="signinPassword" name="password" required>
+                                <div class="error" id="signinPasswordError"></div>
+                            </div>
+                            <button type="submit" class="submit-btn">Sign In</button>
+                        </form>
+                        <div class="auth-links">
+                            <p><a href="#" onclick="showPage('forgot-password')">Forgot your password?</a></p>
+                            <p>Don't have an account? <a href="#" onclick="showPage('signup')">Sign up here</a></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Sign Up Page -->
+        <div id="signup" class="page">
+            <section class="section">
+                <div class="container">
+                    <div class="auth-container">
+                        <div class="auth-header">
+                            <h2>Join EduQuest Rural</h2>
+                            <p>Start your personalized learning adventure today</p>
+                        </div>
+                        <form id="signupForm" onsubmit="handleSignUp(event)">
+                            <div class="form-group">
+                                <label>Select Your Role</label>
+                                <div class="role-selection">
+                                    <div class="role-option" onclick="selectRole('student')">
+                                        <i class="fas fa-user-graduate"></i>
+                                        <div>Student</div>
+                                    </div>
+                                    <div class="role-option" onclick="selectRole('teacher')">
+                                        <i class="fas fa-chalkboard-teacher"></i>
+                                        <div>Teacher</div>
+                                    </div>
+                                    <div class="role-option" onclick="selectRole('parent')">
+                                        <i class="fas fa-users"></i>
+                                        <div>Parent</div>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="selectedRole" name="role" required>
+                                <div class="error" id="roleError"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="fullName">Full Name</label>
+                                <input type="text" id="fullName" name="fullName" required>
+                                <div class="error" id="fullNameError"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="signupEmail">Email Address</label>
+                                <input type="email" id="signupEmail" name="email" required>
+                                <div class="error" id="signupEmailError"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" name="phone" required>
+                                <div class="error" id="phoneError"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="location">Location (Village/City, State)</label>
+                                <input type="text" id="location" name="location" required>
+                                <div class="error" id="locationError"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="preferredLanguage">Preferred Language</label>
+                                <select id="preferredLanguage" name="preferredLanguage" required>
+                                    <option value="">Select Language</option>
+                                    <option value="hindi">Hindi</option>
+                                    <option value="english">English</option>
+                                    <option value="bengali">Bengali</option>
+                                    <option value="gujarati">Gujarati</option>
+                                    <option value="marathi">Marathi</option>
+                                    <option value="tamil">Tamil</option>
+                                    <option value="telugu">Telugu</option>
+                                    <option value="kannada">Kannada</option>
+                                    <option value="malayalam">Malayalam</option>
+                                    <option value="punjabi">Punjabi</option>
+                                    <option value="assamese">Assamese</option>
+                                    <option value="odia">Odia</option>
+                                    <option value="urdu">Urdu</option>
+                                </select>
+                                <div class="error" id="preferredLanguageError"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="signupPassword">Password</label>
+                                <input type="password" id="signupPassword" name="password" required>
+                                <div class="error" id="signupPasswordError"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirm Password</label>
+                                <input type="password" id="confirmPassword" name="confirmPassword" required>
+                                <div class="error" id="confirmPasswordError"></div>
+                            </div>
+                            <button type="submit" class="submit-btn">Create Account</button>
+                        </form>
+                        <div class="auth-links">
+                            <p>Already have an account? <a href="#" onclick="showPage('signin')">Sign in here</a></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Forgot Password Page -->
+        <div id="forgot-password" class="page">
+            <section class="section">
+                <div class="container">
+                    <div class="auth-container">
+                        <div class="auth-header">
+                            <h2>Reset Password</h2>
+                            <p>Enter your email to receive password reset instructions</p>
+                        </div>
+                        <form id="forgotPasswordForm" onsubmit="handleForgotPassword(event)">
+                            <div class="form-group">
+                                <label for="resetEmail">Email Address</label>
+                                <input type="email" id="resetEmail" name="email" required>
+                                <div class="error" id="resetEmailError"></div>
+                            </div>
+                            <button type="submit" class="submit-btn">Send Reset Link</button>
+                        </form>
+                        <div class="auth-links">
+                            <p>Remember your password? <a href="#" onclick="showPage('signin')">Sign in here</a></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- About Page -->
+        <div id="about" class="page">
+            <section class="section">
+                <div class="container">
+                    <h2>Understanding Rural Education Challenges</h2>
+                    <p class="subtitle">Through comprehensive research and community engagement, we've identified the key factors affecting rural education quality and accessibility.</p>
+                    
+                    <div class="swot-container">
+                        <div class="swot-card strengths">
+                            <h3>
+                                <i class="fas fa-star"></i>
+                                Strengths
+                            </h3>
+                            <ul>
+                                <li><i class="fas fa-check"></i> Strong community bonds and family support systems</li>
+                                <li><i class="fas fa-check"></i> Lower student-teacher ratios enabling personalized attention</li>
+                                <li><i class="fas fa-check"></i> Rich cultural heritage and traditional knowledge</li>
+                                <li><i class="fas fa-check"></i> Motivated students eager to learn and improve their lives</li>
+                                <li><i class="fas fa-check"></i> Close-knit learning communities with peer support</li>
+                            </ul>
+                        </div>
+
+                        <div class="swot-card weaknesses">
+                            <h3>
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Weaknesses
+                            </h3>
+                            <ul>
+                                <li><i class="fas fa-times"></i> Limited access to modern educational technology and internet</li>
+                                <li><i class="fas fa-times"></i> Insufficient STEM resources, laboratories, and equipment</li>
+                                <li><i class="fas fa-times"></i> Teacher shortages in specialized subjects like science and math</li>
+                                <li><i class="fas fa-times"></i> Language barriers with English-only educational content</li>
+                                <li><i class="fas fa-times"></i> Lack of personalized learning approaches and adaptive content</li>
+                            </ul>
+                        </div>
+
+                        <div class="swot-card opportunities">
+                            <h3>
+                                <i class="fas fa-lightbulb"></i>
+                                Opportunities
+                            </h3>
+                            <ul>
+                                <li><i class="fas fa-arrow-up"></i> Growing smartphone penetration and mobile internet access</li>
+                                <li><i class="fas fa-arrow-up"></i> Government initiatives for digital education and rural development</li>
+                                <li><i class="fas fa-arrow-up"></i> AI and voice technology making education more accessible</li>
+                                <li><i class="fas fa-arrow-up"></i> Increased parent and community engagement in education</li>
+                                <li><i class="fas fa-arrow-up"></i> Rising demand for STEM skills in rural economies</li>
+                            </ul>
+                        </div>
+
+                        <div class="swot-card threats">
+                            <h3>
+                                <i class="fas fa-shield-alt"></i>
+                                Threats
+                            </h3>
+                            <ul>
+                                <li><i class="fas fa-minus"></i> Widening urban-rural education and opportunity gap</li>
+                                <li><i class="fas fa-minus"></i> Brain drain as educated youth migrate to cities</li>
+                                <li><i class="fas fa-minus"></i> Limited funding for educational infrastructure improvements</li>
+                                <li><i class="fas fa-minus"></i> Resistance to technology adoption by traditional educators</li>
+                                <li><i class="fas fa-minus"></i> Competition from urban schools with better resources</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Vision Section -->
+            <section class="section" style="background: rgba(129, 212, 175, 0.05);">
+                <div class="container">
+                    <div style="text-align: center; max-width: 800px; margin: 0 auto;">
+                        <h2>Our Vision</h2>
+                        <p style="font-size: 1.2rem; line-height: 1.8; color: var(--text-light);">
+                            We envision a world where every rural student has access to world-class STEM education, personalized AI mentorship, and community support that empowers them to pursue their dreams while contributing to their local communities. Through technology, we're not just bridging the education gap – we're creating new pathways for rural prosperity.
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Features Page -->
+        <div id="features" class="page">
+            <section class="section">
+                <div class="container">
+                    <h2>Comprehensive Learning Features</h2>
+                    <p class="subtitle">Discover how our innovative features work together to create an engaging, accessible, and effective learning experience for rural students.</p>
+                    
+                    <div class="features-grid">
+                        <!-- AI Mentor -->
+                        <div class="feature-card">
+                            <i class="fas fa-robot feature-icon"></i>
+                            <h3>AI-Powered Personal Mentor</h3>
+                            <p>Your dedicated learning companion that understands your unique needs and learning style.</p>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-check-circle"></i> Adaptive learning paths based on progress and preferences</li>
+                                <li><i class="fas fa-check-circle"></i> Real-time feedback and encouragement</li>
+                                <li><i class="fas fa-check-circle"></i> Intelligent tutoring with natural conversation</li>
+                                <li><i class="fas fa-check-circle"></i> Career guidance and goal setting</li>
+                                <li><i class="fas fa-check-circle"></i> Learning gap identification and remediation</li>
+                            </ul>
+                        </div>
+
+                        <!-- Voice Learning -->
+                        <div class="feature-card">
+                            <i class="fas fa-microphone feature-icon"></i>
+                            <h3>Voice-Enabled Learning</h3>
+                            <p>Learn naturally in your native language with advanced speech technology.</p>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-check-circle"></i> 15+ Indian languages with regional dialects</li>
+                                <li><i class="fas fa-check-circle"></i> Speech-to-text for voice interactions</li>
+                                <li><i class="fas fa-check-circle"></i> Text-to-speech with natural pronunciation</li>
+                                <li><i class="fas fa-check-circle"></i> Voice-controlled navigation and commands</li>
+                                <li><i class="fas fa-check-circle"></i> Pronunciation practice and language learning</li>
+                            </ul>
+                        </div>
+
+                        <!-- Gamified Learning -->
+                        <div class="feature-card">
+                            <i class="fas fa-gamepad feature-icon"></i>
+                            <h3>Gamified STEM Adventures</h3>
+                            <p>Transform learning into exciting adventures with stories, quests, and challenges.</p>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-check-circle"></i> Interactive story-driven STEM lessons</li>
+                                <li><i class="fas fa-check-circle"></i> Points, badges, and achievement systems</li>
+                                <li><i class="fas fa-check-circle"></i> Progressive levels and skill unlocking</li>
+                                <li><i class="fas fa-check-circle"></i> Collaborative group quests and challenges</li>
+                                <li><i class="fas fa-check-circle"></i> Virtual rewards and recognition systems</li>
+                            </ul>
+                        </div>
+
+                        <!-- Offline Access -->
+                        <div class="feature-card">
+                            <i class="fas fa-download feature-icon"></i>
+                            <h3>Offline Learning Access</h3>
+                            <p>Continue learning even without internet connectivity.</p>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-check-circle"></i> Download lessons and activities for offline use</li>
+                                <li><i class="fas fa-check-circle"></i> OCR-based worksheet digitization</li>
+                                <li><i class="fas fa-check-circle"></i> Sync progress when connection returns</li>
+                                <li><i class="fas fa-check-circle"></i> Offline voice recognition capabilities</li>
+                                <li><i class="fas fa-check-circle"></i> Local storage of learning materials</li>
+                            </ul>
+                        </div>
+
+                        <!-- Community Features -->
+                        <div class="feature-card">
+                            <i class="fas fa-users feature-icon"></i>
+                            <h3>Community Learning Network</h3>
+                            <p>Connect students, teachers, and parents in a supportive learning ecosystem.</p>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-check-circle"></i> Virtual study groups and peer collaboration</li>
+                                <li><i class="fas fa-check-circle"></i> Teacher content creation and sharing tools</li>
+                                <li><i class="fas fa-check-circle"></i> Parent SMS alerts and progress updates</li>
+                                <li><i class="fas fa-check-circle"></i> Community leaderboards and competitions</li>
+                                <li><i class="fas fa-check-circle"></i> Local mentor and expert connections</li>
+                            </ul>
+                        </div>
+
+                        <!-- Accessibility -->
+                        <div class="feature-card">
+                            <i class="fas fa-universal-access feature-icon"></i>
+                            <h3>Accessibility & Inclusion</h3>
+                            <p>Designed for learners with diverse needs and abilities.</p>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-check-circle"></i> Screen reader compatibility and audio descriptions</li>
+                                <li><i class="fas fa-check-circle"></i> High contrast themes and adjustable font sizes</li>
+                                <li><i class="fas fa-check-circle"></i> Support for neurodivergent learning styles</li>
+                                <li><i class="fas fa-check-circle"></i> Motor accessibility with alternative inputs</li>
+                                <li><i class="fas fa-check-circle"></i> Cognitive load reduction and simplified interfaces</li>
+                            </ul>
+                        </div>
+
+                        <!-- Real-World Projects -->
+                        <div class="feature-card">
+                            <i class="fas fa-project-diagram feature-icon"></i>
+                            <h3>Real-World Micro-Projects</h3>
+                            <p>Apply learning to solve actual community problems and challenges.</p>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-check-circle"></i> Local agriculture and farming optimization projects</li>
+                                <li><i class="fas fa-check-circle"></i> Water conservation and management solutions</li>
+                                <li><i class="fas fa-check-circle"></i> Traditional craft digitization and preservation</li>
+                                <li><i class="fas fa-check-circle"></i> Community health and wellness initiatives</li>
+                                <li><i class="fas fa-check-circle"></i> Environmental monitoring and sustainability projects</li>
+                            </ul>
+                        </div>
+
+                        <!-- Assessment Tools -->
+                        <div class="feature-card">
+                            <i class="fas fa-chart-line feature-icon"></i>
+                            <h3>Smart Assessment & Progress Tracking</h3>
+                            <p>Comprehensive evaluation tools that measure true understanding.</p>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-check-circle"></i> Adaptive assessments that adjust to skill level</li>
+                                <li><i class="fas fa-check-circle"></i> Real-time progress analytics and insights</li>
+                                <li><i class="fas fa-check-circle"></i> Competency-based evaluation systems</li>
+                                <li><i class="fas fa-check-circle"></i> Portfolio creation and showcase features</li>
+                                <li><i class="fas fa-check-circle"></i> Detailed parent and teacher reporting</li>
+                            </ul>
+                        </div>
+
+                        <!-- Teacher Tools -->
+                        <div class="feature-card">
+                            <i class="fas fa-chalkboard-teacher feature-icon"></i>
+                            <h3>Teacher Empowerment Tools</h3>
+                            <p>Comprehensive tools to help educators create and manage engaging content.</p>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-check-circle"></i> Easy quiz and assignment creation tools</li>
+                                <li><i class="fas fa-check-circle"></i> Classroom management and student tracking</li>
+                                <li><i class="fas fa-check-circle"></i> Curriculum alignment and standard mapping</li>
+                                <li><i class="fas fa-check-circle"></i> Professional development resources and training</li>
+                                <li><i class="fas fa-check-circle"></i> Collaborative lesson planning and sharing</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- How It Works / Solution Page -->
+        <div id="solution" class="page">
+            <section class="section">
+                <div class="container">
+                    <h2>How EduQuest Rural Works</h2>
+                    <p class="subtitle">Follow the learning journey from initial setup to mastery, guided by AI mentorship and community support.</p>
+                    
+                    <div class="workflow-steps">
+                        <div class="workflow-step">
+                            <div class="step-number">1</div>
+                            <h4>Personalized Onboarding</h4>
+                            <p>Students complete a fun assessment that helps our AI understand their learning style, interests, and current knowledge level. The system adapts immediately to create a personalized learning path.</p>
+                        </div>
+                        
+                        <div class="workflow-step">
+                            <div class="step-number">2</div>
+                            <h4>AI Mentor Introduction</h4>
+                            <p>Meet your personal AI mentor who speaks your language and understands your goals. The mentor introduces itself and explains how it will support your learning journey through interactive conversations.</p>
+                        </div>
+                        
+                        <div class="workflow-step">
+                            <div class="step-number">3</div>
+                            <h4>Interactive STEM Adventures</h4>
+                            <p>Dive into story-driven learning modules where abstract concepts become exciting adventures. Solve real-world problems, conduct virtual experiments, and unlock new levels as you progress.</p>
+                        </div>
+                        
+                        <div class="workflow-step">
+                            <div class="step-number">4</div>
+                            <h4>Community Collaboration</h4>
+                            <p>Join virtual study groups, participate in collaborative projects, and compete in friendly challenges with peers from other rural schools. Share knowledge and learn together.</p>
+                        </div>
+                        
+                        <div class="workflow-step">
+                            <div class="step-number">5</div>
+                            <h4>Real-World Application</h4>
+                            <p>Apply your learning to solve actual community problems through micro-projects. Work on local agriculture optimization, water conservation, or traditional craft preservation.</p>
+                        </div>
+                        
+                        <div class="workflow-step">
+                            <div class="step-number">6</div>
+                            <h4>Continuous Assessment</h4>
+                            <p>Regular progress evaluation through adaptive assessments, peer reviews, and project portfolios. Receive instant feedback and guidance for improvement areas.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Learning Journey Visualization -->
+            <section class="section" style="background: rgba(167, 139, 250, 0.05);">
+                <div class="container">
+                    <h2>The Complete Learning Ecosystem</h2>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <i class="fas fa-user-graduate feature-icon"></i>
+                            <h3>For Students</h3>
+                            <p>Personalized learning adventures that adapt to your pace and interests.</p>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-check-circle"></i> AI mentor for 24/7 learning support</li>
+                                <li><i class="fas fa-check-circle"></i> Gamified lessons with rewards and achievements</li>
+                                <li><i class="fas fa-check-circle"></i> Voice learning in native languages</li>
+                                <li><i class="fas fa-check-circle"></i> Offline access for uninterrupted learning</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <i class="fas fa-chalkboard-teacher feature-icon"></i>
+                            <h3>For Teachers</h3>
+                            <p>Powerful tools to create, manage, and track student progress effectively.</p>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-check-circle"></i> Easy content creation and quiz builders</li>
+                                <li><i class="fas fa-check-circle"></i> Real-time student progress analytics</li>
+                                <li><i class="fas fa-check-circle"></i> Classroom management tools</li>
+                                <li><i class="fas fa-check-circle"></i> Professional development resources</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <i class="fas fa-users feature-icon"></i>
+                            <h3>For Parents</h3>
+                            <p>Stay connected with your child's learning journey and progress.</p>
+                            <ul class="feature-list">
+                                <li><i class="fas fa-check-circle"></i> SMS progress updates and alerts</li>
+                                <li><i class="fas fa-check-circle"></i> Parent dashboard with detailed reports</li>
+                                <li><i class="fas fa-check-circle"></i> Communication tools with teachers</li>
+                                <li><i class="fas fa-check-circle"></i> Home learning activity suggestions</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Contact / Join Us Page -->
+        <div id="contact" class="page">
+            <section class="section">
+                <div class="container">
+                    <h2>Get In Touch</h2>
+                    <p class="subtitle">Ready to transform rural education? We'd love to hear from you and explore partnership opportunities.</p>
+                    
+                    <div class="contact-container">
+                        <div class="contact-info">
+                            <h3>Let's Connect</h3>
+                            <p style="margin-bottom: 2rem; opacity: 0.9;">Whether you're an educator, parent, student, or potential partner, we're here to help you join the EduQuest Rural community.</p>
+                            
+                            <div class="contact-item">
+                                <i class="fas fa-envelope"></i>
+                                <div>
+                                    <strong>Email</strong><br>
+                                    hello@edquestrural.org
+                                </div>
+                            </div>
+                            
+                            <div class="contact-item">
+                                <i class="fas fa-phone"></i>
+                                <div>
+                                    <strong>Phone</strong><br>
+                                    +91 6367831752
+                                </div>
+                            </div>
+                            
+                            <div class="contact-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <div>
+                                    <strong>Address</strong><br>
+                                    Rural Education Hub<br>
+                                    Vadodra, India
+                                </div>
+                            </div>
+                            
+                            <div class="social-links">
+                                <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                                <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-form">
+                            <h3>Send Us a Message</h3>
+                            <form id="contactForm" onsubmit="handleContactForm(event)">
+                                <div class="form-group">
+                                    <label for="contactName">Full Name *</label>
+                                    <input type="text" id="contactName" name="name" required>
+                                    <div class="error" id="contactNameError"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="contactEmail">Email Address *</label>
+                                    <input type="email" id="contactEmail" name="email" required>
+                                    <div class="error" id="contactEmailError"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="contactPhone">Phone Number</label>
+                                    <input type="tel" id="contactPhone" name="phone">
+                                    <div class="error" id="contactPhoneError"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="contactRole">I am a *</label>
+                                    <select id="contactRole" name="role" required>
+                                        <option value="">Select your role</option>
+                                        <option value="student">Student</option>
+                                        <option value="parent">Parent</option>
+                                        <option value="teacher">Teacher</option>
+                                        <option value="principal">School Principal/Administrator</option>
+                                        <option value="government">Government Official</option>
+                                        <option value="ngo">NGO Representative</option>
+                                        <option value="investor">Investor/Funder</option>
+                                        <option value="partner">Potential Partner</option>
+                                        <option value="media">Media/Press</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                    <div class="error" id="contactRoleError"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="contactSubject">Subject *</label>
+                                    <input type="text" id="contactSubject" name="subject" required>
+                                    <div class="error" id="contactSubjectError"></div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="contactMessage">Message *</label>
+                                    <textarea id="contactMessage" name="message" required placeholder="Tell us about your interest in EduQuest Rural, questions, or how we can help..."></textarea>
+                                    <div class="error" id="contactMessageError"></div>
+                                </div>
+                                
+                                <button type="submit" class="submit-btn">Send Message</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- FAQ Section -->
+            <section class="section" style="background: rgba(129, 212, 175, 0.05);">
+                <div class="container">
+                    <h2>Frequently Asked Questions</h2>
+                    <div class="faq-container">
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFAQ(this)">
+                                How does the AI mentor work?
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>Our AI mentor uses advanced machine learning to understand each student's learning patterns, preferences, and progress. It provides personalized guidance, adapts content difficulty, offers hints and encouragement, and helps students set and achieve learning goals. The mentor communicates in the student's preferred language and is available 24/7.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFAQ(this)">
+                                Which languages are supported?
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>We support 15+ Indian languages including Hindi, English, Bengali, Gujarati, Marathi, Tamil, Telugu, Kannada, Malayalam, Punjabi, Assamese, Odia, and Urdu. Our voice recognition and text-to-speech features work with regional dialects and accents to ensure natural communication.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFAQ(this)">
+                                Can students learn without internet?
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>Yes! Students can download lessons, activities, and resources for offline learning. Our OCR technology also allows digitization of physical worksheets. When internet connectivity returns, all progress automatically syncs to the cloud.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFAQ(this)">
+                                How do parents stay involved?
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>Parents receive regular SMS updates about their child's progress, achievements, and learning milestones. They also get access to a parent dashboard with detailed reports, suggested home activities, and direct communication tools with teachers.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFAQ(this)">
+                                Is the platform free for students?
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>Yes, EduQuest Rural is completely free for students, teachers, and parents in rural communities. Our mission is to democratize quality STEM education, and we're supported by grants, partnerships, and social impact funding.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFAQ(this)">
+                                What devices are compatible?
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="faq-answer">
+                                <p>EduQuest Rural works on smartphones, tablets, and computers. Our mobile-first design ensures optimal performance even on entry-level Android devices with limited memory and processing power.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Newsletter Section -->
+        <section class="newsletter-section">
+            <div class="container">
+                <div class="newsletter-container">
+                    <h2>Stay Updated</h2>
+                    <p>Join our newsletter to receive updates about new features, success stories, and opportunities in rural education.</p>
+                    <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+                        <input type="email" placeholder="Enter your email address" required>
+                        <button type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>EduQuest Rural</h3>
+                    <p>Transforming rural education through AI-powered learning, community engagement, and personalized mentorship.</p>
+                    <div class="social-links" style="justify-content: flex-start; margin-top: 1rem;">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Platform</h3>
+                    <ul>
+                        <li><a href="#" onclick="showPage('features')">Features</a></li>
+                        <li><a href="#" onclick="showPage('solution')">How It Works</a></li>
+                        <li><a href="#" onclick="showPage('signup')">Get Started</a></li>
+                        <li><a href="#">API Documentation</a></li>
+                        <li><a href="#">System Status</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#" onclick="showPage('about')">About Us</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Research Papers</a></li>
+                        <li><a href="#">Teacher Training</a></li>
+                        <li><a href="#">Community Guidelines</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#" onclick="showPage('contact')">Contact Us</a></li>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Technical Support</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 EduQuest Rural. All rights reserved. | Empowering rural communities through education.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Global Variables
+        let currentPage = 'home';
+        let selectedUserRole = null;
+        
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hide loading spinner after page load
+            setTimeout(() => {
+                document.getElementById('loadingSpinner').classList.add('hidden');
+            }, 1000);
+            
+            // Add scroll effect to navbar
+            window.addEventListener('scroll', handleNavbarScroll);
+            
+            // Initialize form validation
+            initializeFormValidation();
+        });
+
+        // Navigation Functions
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            currentPage = pageId;
+            
+            // Close mobile menu if open
+            document.getElementById('navLinks').classList.remove('active');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+            
+            // Update page title
+            updatePageTitle(pageId);
+        }
+
+        function updatePageTitle(pageId) {
+            const titles = {
+                'home': 'EduQuest Rural - Transforming Rural Education',
+                'about': 'About Us - EduQuest Rural',
+                'features': 'Features - EduQuest Rural',
+                'solution': 'How It Works - EduQuest Rural',
+                'contact': 'Contact Us - EduQuest Rural',
+                'signin': 'Sign In - EduQuest Rural',
+                'signup': 'Join Us - EduQuest Rural',
+                'forgot-password': 'Reset Password - EduQuest Rural'
+            };
+            document.title = titles[pageId] || 'EduQuest Rural';
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+        }
+
+        function handleNavbarScroll() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        }
+
+        // Authentication Functions
+        function selectRole(role) {
+            // Remove previous selection
+            document.querySelectorAll('.role-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Select new role
+            event.target.closest('.role-option').classList.add('selected');
+            selectedUserRole = role;
+            document.getElementById('selectedRole').value = role;
+            
+            // Clear role error
+            document.getElementById('roleError').textContent = '';
+        }
+
+        function handleSignIn(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const email = formData.get('email');
+            const password = formData.get('password');
+            
+            // Basic validation
+            if (!validateEmail(email)) {
+                showError('signinEmailError', 'Please enter a valid email address');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showError('signinPasswordError', 'Password must be at least 6 characters');
+                return;
+            }
+            
+            // Clear errors
+            clearErrors(['signinEmailError', 'signinPasswordError']);
+            
+            // Simulate API call
+            showLoadingButton(event.target.querySelector('.submit-btn'), 'Signing In...');
+            
+            setTimeout(() => {
+                // TODO: Replace with actual API call
+                console.log('Sign in data:', { email, password });
+                alert('Sign in successful! (This is a demo)');
+                hideLoadingButton(event.target.querySelector('.submit-btn'), 'Sign In');
+                showPage('home');
+            }, 2000);
+        }
+
+        function handleSignUp(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Validation
+            let isValid = true;
+            
+            if (!selectedUserRole) {
+                showError('roleError', 'Please select your role');
+                isValid = false;
+            }
+            
+            if (!data.fullName || data.fullName.length < 2) {
+                showError('fullNameError', 'Please enter your full name');
+                isValid = false;
+            }
+            
+            if (!validateEmail(data.email)) {
+                showError('signupEmailError', 'Please enter a valid email address');
+                isValid = false;
+            }
+            
+            if (!data.phone || data.phone.length < 10) {
+                showError('phoneError', 'Please enter a valid phone number');
+                isValid = false;
+            }
+            
+            if (!data.location || data.location.length < 3) {
+                showError('locationError', 'Please enter your location');
+                isValid = false;
+            }
+            
+            if (!data.preferredLanguage) {
+                showError('preferredLanguageError', 'Please select your preferred language');
+                isValid = false;
+            }
+            
+            if (data.password.length < 8) {
+                showError('signupPasswordError', 'Password must be at least 8 characters');
+                isValid = false;
+            }
+            
+            if (data.password !== data.confirmPassword) {
+                showError('confirmPasswordError', 'Passwords do not match');
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+            
+            // Clear all errors
+            clearErrors([
+                'roleError', 'fullNameError', 'signupEmailError', 'phoneError', 
+                'locationError', 'preferredLanguageError', 'signupPasswordError', 'confirmPasswordError'
+            ]);
+            
+            // Simulate API call
+            showLoadingButton(event.target.querySelector('.submit-btn'), 'Creating Account...');
+            
+            setTimeout(() => {
+                // TODO: Replace with actual API call
+                console.log('Sign up data:', { ...data, role: selectedUserRole });
+                alert('Account created successfully! Welcome to EduQuest Rural! (This is a demo)');
+                hideLoadingButton(event.target.querySelector('.submit-btn'), 'Create Account');
+                showPage('home');
+            }, 2000);
+        }
+
+        function handleForgotPassword(event) {
+            event.preventDefault();
+            
+            const email = event.target.email.value;
+            
+            if (!validateEmail(email)) {
+                showError('resetEmailError', 'Please enter a valid email address');
+                return;
+            }
+            
+            clearErrors(['resetEmailError']);
+            
+            showLoadingButton(event.target.querySelector('.submit-btn'), 'Sending Link...');
+            
+            setTimeout(() => {
+                // TODO: Replace with actual API call
+                console.log('Password reset for:', email);
+                alert('Password reset link sent! Check your email. (This is a demo)');
+                hideLoadingButton(event.target.querySelector('.submit-btn'), 'Send Reset Link');
+                showPage('signin');
+            }, 2000);
+        }
+
+        function handleContactForm(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Validation
+            let isValid = true;
+            
+            if (!data.name || data.name.length < 2) {
+                showError('contactNameError', 'Please enter your full name');
+                isValid = false;
+            }
+            
+            if (!validateEmail(data.email)) {
+                showError('contactEmailError', 'Please enter a valid email address');
+                isValid = false;
+            }
+            
+            if (!data.role) {
+                showError('contactRoleError', 'Please select your role');
+                isValid = false;
+            }
+            
+            if (!data.subject || data.subject.length < 3) {
+                showError('contactSubjectError', 'Please enter a subject');
+                isValid = false;
+            }
+            
+            if (!data.message || data.message.length < 10) {
+                showError('contactMessageError', 'Please enter a message (at least 10 characters)');
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+            
+            clearErrors([
+                'contactNameError', 'contactEmailError', 'contactRoleError', 
+                'contactSubjectError', 'contactMessageError'
+            ]);
+            
+            showLoadingButton(event.target.querySelector('.submit-btn'), 'Sending...');
+            
+            setTimeout(() => {
+                // TODO: Replace with actual API call
+                console.log('Contact form data:', data);
+                alert('Message sent successfully! We\'ll get back to you soon. (This is a demo)');
+                hideLoadingButton(event.target.querySelector('.submit-btn'), 'Send Message');
+                event.target.reset();
+            }, 2000);
+        }
+
+        function handleNewsletter(event) {
+            event.preventDefault();
+            
+            const email = event.target.querySelector('input[type="email"]').value;
+            
+            if (!validateEmail(email)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+            
+            const button = event.target.querySelector('button');
+            showLoadingButton(button, 'Subscribing...');
+            
+            setTimeout(() => {
+                // TODO: Replace with actual API call
+                console.log('Newsletter subscription:', email);
+                alert('Successfully subscribed to our newsletter! (This is a demo)');
+                hideLoadingButton(button, 'Subscribe');
+                event.target.reset();
+            }, 1500);
+        }
+
+        // FAQ Functions
+        function toggleFAQ(element) {
+            const faqItem = element.closest('.faq-item');
+            const isActive = faqItem.classList.contains('active');
+            
+            // Close all FAQ items
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Open clicked item if it wasn't active
+            if (!isActive) {
+                faqItem.classList.add('active');
+            }
+        }
+
+        // Utility Functions
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            if (errorElement) {
+                errorElement.textContent = message;
+                const inputElement = errorElement.previousElementSibling;
+                if (inputElement && inputElement.tagName === 'INPUT') {
+                    inputElement.classList.add('error');
+                }
+            }
+        }
+
+        function clearErrors(errorIds) {
+            errorIds.forEach(id => {
+                const errorElement = document.getElementById(id);
+                if (errorElement) {
+                    errorElement.textContent = '';
+                    const inputElement = errorElement.previousElementSibling;
+                    if (inputElement && inputElement.tagName === 'INPUT') {
+                        inputElement.classList.remove('error');
+                    }
+                }
+            });
+        }
+
+        function showLoadingButton(button, text) {
+            button.disabled = true;
+            button.innerHTML = `<i class="fas fa-spinner fa-spin" style="margin-right: 0.5rem;"></i>${text}`;
+        }
+
+        function hideLoadingButton(button, originalText) {
+            button.disabled = false;
+            button.textContent = originalText;
+        }
+
+        function initializeFormValidation() {
+            // Add real-time validation to form inputs
+            document.querySelectorAll('input, select, textarea').forEach(input => {
+                input.addEventListener('blur', function() {
+                    // Clear error styling when user starts typing
+                    this.classList.remove('error');
+                    const errorElement = this.nextElementSibling;
+                    if (errorElement && errorElement.classList.contains('error')) {
+                        errorElement.textContent = '';
+                    }
+                });
+            });
+        }
+
+        // Keyboard Navigation Support
+        document.addEventListener('keydown', function(event) {
+            // ESC key to close mobile menu
+            if (event.key === 'Escape') {
+                document.getElementById('navLinks').classList.remove('active');
+            }
+        });
+
+        // Smooth Scrolling for Anchor Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Image Lazy Loading (for when actual images are added)
+        function lazyLoadImages() {
+            const images = document.querySelectorAll('img[data-src]');
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.classList.remove('lazy');
+                        observer.unobserve(img);
+                    }
+                });
+            });
+            
+            images.forEach(img => imageObserver.observe(img));
+        }
+
+        // Call lazy loading when DOM is loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', lazyLoadImages);
+        } else {
+            lazyLoadImages();
+        }
+
+        // Progressive Web App Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                // TODO: Register service worker for offline functionality
+                // navigator.serviceWorker.register('/sw.js');
+            });
+        }
+
+        // Analytics Event Tracking (placeholder for actual analytics)
+        function trackEvent(eventName, properties) {
+            console.log('Analytics Event:', eventName, properties);
+            // TODO: Replace with actual analytics service (Google Analytics, Mixpanel, etc.)
+        }
+
+        // Track page views
+        function trackPageView(pageName) {
+            trackEvent('page_view', { page: pageName });
+        }
+
+        // Update page view tracking
+        const originalShowPage = showPage;
+        showPage = function(pageId) {
+            originalShowPage(pageId);
+            trackPageView(pageId);
+        };
+
+        // API Integration Helpers (for future backend integration)
+        class APIClient {
+            constructor(baseURL = '/api') {
+                this.baseURL = baseURL;
+            }
+
+            async request(endpoint, options = {}) {
+                const url = `${this.baseURL}${endpoint}`;
+                const config = {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers,
+                    },
+                    ...options,
+                };
+
+                if (config.body && typeof config.body === 'object') {
+                    config.body = JSON.stringify(config.body);
+                }
+
+                try {
+                    const response = await fetch(url, config);
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.message || 'API request failed');
+                    }
+
+                    return data;
+                } catch (error) {
+                    console.error('API Error:', error);
+                    throw error;
+                }
+            }
+
+            // Authentication endpoints
+            async signIn(email, password) {
+                return this.request('/auth/signin', {
+                    method: 'POST',
+                    body: { email, password },
+                });
+            }
+
+            async signUp(userData) {
+                return this.request('/auth/signup', {
+                    method: 'POST',
+                    body: userData,
+                });
+            }
+
+            async forgotPassword(email) {
+                return this.request('/auth/forgot-password', {
+                    method: 'POST',
+                    body: { email },
+                });
+            }
+
+            // Contact form endpoint
+            async submitContact(contactData) {
+                return this.request('/contact', {
+                    method: 'POST',
+                    body: contactData,
+                });
+            }
+
+            // Newsletter subscription
+            async subscribeNewsletter(email) {
+                return this.request('/newsletter/subscribe', {
+                    method: 'POST',
+                    body: { email },
+                });
+            }
+        }
+
+        // Initialize API client (uncomment when backend is ready)
+        // const api = new APIClient();
+
+        console.log('EduQuest Rural website loaded successfully! 🎓✨');
+    </script>
+</body>
+</html>
+            
